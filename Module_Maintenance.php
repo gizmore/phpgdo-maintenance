@@ -29,16 +29,16 @@ final class Module_Maintenance extends GDO_Module
     {
         return [
             GDT_Checkbox::make('maintenance_on')->initial('0'),
-            GDT_DateTime::make('maintenance_end')->format('min'),
+            GDT_DateTime::make('maintenance_end')->format('minute'),
         ];
     }
-    public function cfgOn() : bool { return $this->getConfigValue('maintenance_on'); }
-    public function cfgEnd() { return $this->getConfigValue('maintenance_end'); }
+    public function cfgOn(): bool { return $this->getConfigValue('maintenance_on'); }
+    public function cfgEnd(): ?\DateTime { return $this->getConfigValue('maintenance_end'); }
     
     ############
     ### Init ###
     ############
-    public function onInit()
+    public function onModuleInit(): void
     {
         if ($this->cfgOn())
         {

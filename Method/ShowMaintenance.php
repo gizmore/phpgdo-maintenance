@@ -11,75 +11,93 @@ use GDO\Core\Application;
 
 /**
  * Show the site is in maintenance mode and when it might it.
- * 
+ *
  * @author gizmore
  * @version 7.0.1
  */
 final class ShowMaintenance extends Method
 {
-	public function isIndexed(): bool { return false; }
-	public function isSavingLastUrl(): bool { return false; }
-	public function isShownInSitemap(): bool { return false; }
-	
-    public function execute()
-    {
-        $mod = Module_Maintenance::instance();
-        if ($end = $mod->cfgEnd())
-        {
-            $in = $end - Application::$TIME;
-            $ends = Time::humanDuration($in);
-        }
-        return (($end) && ($in > 0)) ? 
-            $this->error('err_maintenance_mode', [sitename(), $ends]) :
-            $this->error('err_maintenance_mode_unknown', [sitename()]);
-    }
-    
-    ### API ##
-    public static function go(): void
-    {
-    	global $me;
-    	if (!self::isCurrentMethodWhitelisted())
-    	{
-    		$user = GDO_User::current();
-    		if ( (!$user->isStaff()) &&
-    			(!$user->isSystem()) )
-	    	{
-	    		GDO_User::setCurrent(GDO_User::ghost());
-	    		$me = self::make();
-	    	}
-	    	elseif ($me)
-	    	{
-	    		GDT_Page::instance()->topResponse()->addFields(
-	    			GDT_Headline::make()->level(1)->text('msg_maintenance_mode'));
-	    	}
-    	}
-    }
-    
-    #################
-    ### Whitelist ###
-    #################
-    /**
-     * Allow a few functions to operate normally on normal users.
-     * @return string[]
-     */
-    public static function getWhitelist()
-    {
-    	return [
-    		'core.fileserver',
-    		'login.form',
-    		'language.gettrans',
-    		'captcha.image',
-    		'maintenance.show',
-    	];
-    }
-    
-    public static function isCurrentMethodWhitelisted()
-    {
-    	/** @var $me \GDO\Core\Method **/
-    	global $me;
-    	$mo = strtolower($me->getModuleName());
-    	$me = strtolower($me->getMethodName());
-    	return in_array("{$mo}.{$me}", self::getWhitelist(), true);
-    }
-    
+
+	public function isIndexed(): bool
+	{
+		return false;
+	}
+
+	public function isSavingLastUrl(): bool
+	{
+		return false;
+	}
+
+	public function isShownInSitemap(): bool
+	{
+		return false;
+	}
+
+	public function execute()
+	{
+		$mod = Module_Maintenance::instance();
+		if ($end = $mod->cfgEnd())
+		{
+			$in = $end - Application::$TIME;
+			$ends = Time::humanDuration($in);
+		}
+		return (($end) && ($in > 0)) ? $this->error('err_maintenance_mode', [
+			sitename(),
+			$ends
+		]) : $this->error('err_maintenance_mode_unknown', [
+			sitename()
+		]);
+	}
+
+	# ## API ##
+	public static function go(): void
+	{
+		global $me;
+		if ( !self::isCurrentMethodWhitelisted())
+		{
+			$user = GDO_User::current();
+			if (( !$user->isStaff()) && ( !$user->isSystem()))
+			{
+				GDO_User::setCurrent(GDO_User::ghost());
+				$me = self::make();
+			}
+			if ($me)
+			{
+				GDT_Page::instance()->topResponse()->addFields(
+					GDT_Headline::make()->level(1)
+						->text('msg_maintenance_mode'));
+			}
+		}
+	}
+
+	# ################
+	# ## Whitelist ###
+	# ################
+	/**
+	 * Allow a few functions to operate normally on normal users.
+	 *
+	 * @return string[]
+	 */
+	public static function getWhitelist()
+	{
+		$default = strtolower(GDO_MODULE . '.' . GDO_METHOD);
+		return [
+			$default,
+			'core.fileserver',
+			'login.form',
+			'language.gettrans',
+			'captcha.image',
+			'maintenance.show',
+		];
+	}
+
+	public static function isCurrentMethodWhitelisted(): bool
+	{
+		/** @var $me \GDO\Core\Method **/
+		global $me;
+		$module = strtolower($me->getModuleName());
+		$method = strtolower($me->getMethodName());
+		return in_array("{$module}.{$method}", self::getWhitelist(), true);
+	}
+
 }
