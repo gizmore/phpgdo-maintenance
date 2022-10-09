@@ -8,6 +8,7 @@ use GDO\UI\GDT_Headline;
 use GDO\UI\GDT_Page;
 use GDO\User\GDO_User;
 use GDO\Core\Application;
+use GDO\UI\GDT_Redirect;
 
 /**
  * Show the site is in maintenance mode and when it might it.
@@ -38,7 +39,7 @@ final class ShowMaintenance extends Method
 		$mod = Module_Maintenance::instance();
 		if ($end = $mod->cfgEnd())
 		{
-			$in = $end - Application::$TIME;
+			$in = $end->getTimestamp() - Application::$TIME;
 			$ends = Time::humanDuration($in);
 		}
 		return (($end) && ($in > 0)) ? $this->error('err_maintenance_mode', [
@@ -60,6 +61,8 @@ final class ShowMaintenance extends Method
 			{
 				GDO_User::setCurrent(GDO_User::ghost());
 				$me = self::make();
+// 				GDT_Redirect::to($me->href());
+// 				die(0);
 			}
 			if ($me)
 			{
