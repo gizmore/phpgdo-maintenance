@@ -1,14 +1,13 @@
 <?php
 namespace GDO\Maintenance\Method;
 
+use const False\MyClass\true;
+use GDO\Core\Application;
 use GDO\Core\Method;
 use GDO\Date\Time;
 use GDO\Maintenance\Module_Maintenance;
-use GDO\UI\GDT_Headline;
-use GDO\UI\GDT_Page;
-use GDO\User\GDO_User;
-use GDO\Core\Application;
 use GDO\UI\GDT_Redirect;
+use GDO\User\GDO_User;
 
 /**
  * Show the site is in maintenance mode and when it might it.
@@ -37,6 +36,13 @@ final class ShowMaintenance extends Method
 	public function execute()
 	{
 		$mod = Module_Maintenance::instance();
+		if (!$mod->cfgOn())
+		{
+			# Ended already
+			return GDT_Redirect::to(hrefDefault());
+		}
+		
+		# timed or unknown.
 		if ($end = $mod->cfgEnd())
 		{
 			$in = $end->getTimestamp() - Application::$TIME;
