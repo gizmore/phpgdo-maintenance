@@ -61,15 +61,15 @@ final class ShowMaintenance extends Method
 			{
 				GDO_User::setCurrent(GDO_User::ghost());
 				$me = self::make();
-// 				GDT_Redirect::to($me->href());
+				GDT_Redirect::to($me->href());
 // 				die(0);
 			}
-			if ($me)
-			{
-				GDT_Page::instance()->topResponse()->addFields(
-					GDT_Headline::make()->level(1)
-						->text('msg_maintenance_mode'));
-			}
+// 			if ($me)
+// 			{
+// 				GDT_Page::instance()->topResponse()->addFields(
+// 					GDT_Headline::make()->level(1)
+// 						->text('msg_maintenance_mode'));
+// 			}
 		}
 	}
 
@@ -90,7 +90,7 @@ final class ShowMaintenance extends Method
 			'login.form',
 			'language.gettrans',
 			'captcha.image',
-			'maintenance.show',
+			'maintenance.showmaintenance',
 		];
 	}
 

@@ -38,7 +38,7 @@ final class Module_Maintenance extends GDO_Module
     ############
     ### Init ###
     ############
-    public function onModuleInit(): void
+    public function hookBeforeExecute(): void
     {
         if ($this->cfgOn())
         {
