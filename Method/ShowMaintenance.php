@@ -2,6 +2,7 @@
 namespace GDO\Maintenance\Method;
 
 use GDO\Core\Application;
+use GDO\Core\GDT;
 use GDO\Core\Method;
 use GDO\Date\Time;
 use GDO\Maintenance\Module_Maintenance;
@@ -88,7 +89,7 @@ final class ShowMaintenance extends Method
 		return false;
 	}
 
-	public function execute()
+	public function execute(): GDT
 	{
 		$mod = Module_Maintenance::instance();
 		if (!$mod->cfgOn())

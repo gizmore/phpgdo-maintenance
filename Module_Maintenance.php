@@ -17,7 +17,7 @@ use GDO\Maintenance\Method\ShowMaintenance;
 final class Module_Maintenance extends GDO_Module
 {
 
-	public $module_priority = 10; # kill user early.
+	public int $priority = 10; # kill user early.
 
 	public function onLoadLanguage(): void
 	{
